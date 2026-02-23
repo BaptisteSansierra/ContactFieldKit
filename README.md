@@ -175,7 +175,7 @@ ContactFieldKit uses [NoFlyZone](https://github.com/BaptisteSansierra/NoFlyZone)
 
 ## Example Project
 
-Check out the [Example](Example/) folder for a complete demo app showing:
+Check out the [Example](Examples/) folder for a complete demo app showing:
 - Contact detail views
 - Contact editing with multiple field types
 - Label customization
