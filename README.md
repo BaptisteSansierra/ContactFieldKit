@@ -2,20 +2,6 @@
 
 A SwiftUI package that provides native iOS-style contact field management for phones, emails, and URLs. Built to match the look and feel of Apple's Contacts app.
 
-<p align="center">
-  <img src="screenshots/screen1.png" alt="Details" width="300"/>
-  <img src="screenshots/screen2.png" alt="Edit" width="300"/>
-  <img src="screenshots/screen3.png" alt="Pick a label" width="300"/>
-</p>
-
-<p align="center">
-  <em>Contact details</em>
-  <span style="display:inline-block; width: 80px;"></span>
-  <em>Edit contact</em>
-  <span style="display:inline-block; width: 80px;"></span>
-  <em>Pick a label</em>
-</p>
-
 | Contact details | Edit contact | Pick a label |
 |-----------------|--------------|--------------|
 | ![Details](screenshots/screen1.png) | ![Edit](screenshots/screen2.png) | ![Labels](screenshots/screen3.png) |
