@@ -16,6 +16,11 @@ A SwiftUI package that provides native iOS-style contact field management for ph
   <em>Pick a label</em>
 </p>
 
+| Contact details | Edit contact | Pick a label |
+|-----------------|--------------|--------------|
+| ![Details](screenshots/screen1.png) | ![Edit](screenshots/screen2.png) | ![Labels](screenshots/screen3.png) |
+
+
 ## Features
 
 - ✅ Display and edit phone numbers, emails, and URLs
