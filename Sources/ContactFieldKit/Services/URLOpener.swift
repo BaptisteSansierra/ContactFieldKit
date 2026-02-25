@@ -17,8 +17,8 @@ public enum URLOpenerError: Error {
 
 public struct OpenURLAlert: Identifiable {
     public let id = UUID()
-    let title: String
-    let body: String
+    public let title: String
+    public let body: String
 }
 
 public struct URLOpener {
