@@ -11,7 +11,8 @@ public struct ContactItemView: View {
     
     // MARK: - States & Bindings
     @State private var highlightedRow: Int? = nil
-    @State private var openURLError: URLOpenerError? = nil
+    @State private var openURLAlert: OpenURLAlert? = nil
+    
     @GestureState private var isPressingRow = false
     // Data
     @Binding private var contactItems: [ContactItem]
@@ -29,14 +30,14 @@ public struct ContactItemView: View {
             .cornerRadius(15)
             .padding(.horizontal)
             .opacity(contactItems.count > 0 ? 1 : 0)
-            .alert(getURLErrorL10nTitle(),
+            .alert(openURLAlert?.title ?? "",
                    isPresented: Binding(get: {
-                openURLError != nil
+                openURLAlert != nil
             }, set: { v in
-                openURLError = v ? openURLError : nil
+                openURLAlert = v ? openURLAlert : nil
             }), actions: {
             }) {
-                Text(getURLErrorL10nBody())
+                Text(openURLAlert?.body ?? "")
             }
     }
     
@@ -133,44 +134,8 @@ public struct ContactItemView: View {
             guard let error = error as? URLOpenerError else {
                 return
             }
-            openURLError = error
+            openURLAlert = URLOpener.alertContent(error)
         }
-    }
-    
-    private func getURLErrorL10nTitle() -> String {
-        guard let openURLError = openURLError else {
-            return "Error"
-        }
-        var key: String
-        switch openURLError {
-            case .invalidURL:
-                key = "error.invalid_link.title"
-            case .cannotOpenPhoneURL:
-                key = "error.cannot_open_phone_url.title"
-            case .cannotOpenEmailURL:
-                key = "error.cannot_open_email_url.title"
-            case .cannotOpenWebURL:
-                key = "error.cannot_open_web_url.title"
-        }
-        return String(localized: String.LocalizationValue(key), bundle: .module)
-    }
-    
-    private func getURLErrorL10nBody() -> String {
-        guard let openURLError = openURLError else {
-            return "N/A"
-        }
-        var key: String
-        switch openURLError {
-            case .invalidURL:
-                key = "error.invalid_link.body"
-            case .cannotOpenPhoneURL:
-                key = "error.cannot_open_phone_url.body"
-            case .cannotOpenEmailURL:
-                key = "error.cannot_open_email_url.body"
-            case .cannotOpenWebURL:
-                key = "error.cannot_open_web_url.body"
-        }
-        return String(localized: String.LocalizationValue(key), bundle: .module)
     }
 }
 
@@ -204,14 +169,14 @@ struct MockContactItemView: View {
    
    init() {
        self.phones = [ContactItem(value: "+12125557483",
-                                  label: ContactLabel(kind: .phone, label: .phone)),
+                                  label: ContactLabel(kind: .phone, label: .phone))/*,
                       ContactItem(value: "+16465552917",
                                   label: ContactLabel(kind: .phone, label: .mobile)),
                       ContactItem(value: "+13125556042",
                                   label: ContactLabel(kind: .phone, label: .custom("work"))),
                       ContactItem(value: "+14155558831",
-                                  label: ContactLabel(kind: .phone, label: .custom("club")))]
-       self.emails = [] // [ContactItem(value: "john.doe@home.com", label: ContactLabel(kind: .email, label: .email))]
+                                  label: ContactLabel(kind: .phone, label: .custom("club")))*/]
+       self.emails = [ContactItem(value: "john.doe@home.com", label: ContactLabel(kind: .email, label: .email))]
        self.urls = [ContactItem(value: "google.com",
                                 label: ContactLabel(kind: .url, label: .url))]
    }

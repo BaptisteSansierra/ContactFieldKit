@@ -8,16 +8,23 @@
 import Foundation
 import UIKit
 
-internal enum URLOpenerError: Error {
+public enum URLOpenerError: Error {
     case invalidURL
     case cannotOpenPhoneURL
     case cannotOpenEmailURL
     case cannotOpenWebURL
 }
 
-internal struct URLOpener {
+public struct OpenURLAlert: Identifiable {
+    public let id = UUID()
+    let title: String
+    let body: String
+}
 
-    static func openURL(contactItem: ContactItem) throws {
+public struct URLOpener {
+
+    // MARK: public methods
+    static public func openURL(contactItem: ContactItem) throws {
         switch contactItem.label.kind {
             case .phone:
                 try openPhoneURL(contactItem.value)
@@ -28,6 +35,11 @@ internal struct URLOpener {
         }
     }
     
+    static public func alertContent(_ error: URLOpenerError) -> OpenURLAlert {
+        return OpenURLAlert(title: errorTitle(error), body: errorBody(error))
+    }
+
+    // MARK: private methods
     static private func openPhoneURL(_ value: String) throws {
         guard let url = URL(string: "tel://\(value)") else {
             throw URLOpenerError.invalidURL
@@ -65,5 +77,35 @@ internal struct URLOpener {
             throw URLOpenerError.cannotOpenWebURL
         }
         UIApplication.shared.open(url)
+    }
+        
+    static private func errorTitle(_ error: URLOpenerError) -> String {
+        var key: String
+        switch error {
+            case .invalidURL:
+                key = "error.invalid_link.title"
+            case .cannotOpenPhoneURL:
+                key = "error.cannot_open_phone_url.title"
+            case .cannotOpenEmailURL:
+                key = "error.cannot_open_email_url.title"
+            case .cannotOpenWebURL:
+                key = "error.cannot_open_web_url.title"
+        }
+        return String(localized: String.LocalizationValue(key), bundle: .module)
+    }
+    
+    static private func errorBody(_ error: URLOpenerError) -> String {
+        var key: String
+        switch error {
+            case .invalidURL:
+                key = "error.invalid_link.body"
+            case .cannotOpenPhoneURL:
+                key = "error.cannot_open_phone_url.body"
+            case .cannotOpenEmailURL:
+                key = "error.cannot_open_email_url.body"
+            case .cannotOpenWebURL:
+                key = "error.cannot_open_web_url.body"
+        }
+        return String(localized: String.LocalizationValue(key), bundle: .module)
     }
 }
