@@ -123,7 +123,7 @@ public struct ContactItemEditView: View {
             HStack {
                 addButtonView
                     .padding(.leading)
-                Text(String(localized: getAddViewContent(), bundle: .module).capitalized)
+                Text(String(localized: getAddViewContent(), bundle: .module).capitalizeFirst)
                     .foregroundStyle(ContactFieldUIConfig.textPrimaryColor)
                     .font(ContactFieldUIConfig.captionTextFont)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -408,6 +408,7 @@ public struct ContactItemEditView: View {
                                  y: rowFrame.origin.y,
                                  width: rowFrame.size.width - posX,
                                  height: rowHeight)
+        guard idx < values.count else { return }
         values[idx].deleteFrame = buttonFrame
     }
     
