@@ -35,7 +35,7 @@ public struct ContactItemEditView: View {
     private let rowLabelLeadPaddingW: CGFloat = 10
     private let rowDeleteButtonW: CGFloat = 50
     private let rowChevronW: CGFloat = 20
-    private let rowSeparatorW: CGFloat = 0.5
+    private let rowSeparatorW: CGFloat = ContactFieldUIConfig.dividerThickness
     
     // MARK: - init
     public init(viewIdentifier: Int,
@@ -91,9 +91,10 @@ public struct ContactItemEditView: View {
     // MARK: - subviews
     private var contentView: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
-            Divider()
-                .overlay(ContactFieldUIConfig.topDivider)
+            Rectangle()
+                .fill(ContactFieldUIConfig.topDivider)
+                .frame(maxWidth: .infinity)
+                .frame(height: ContactFieldUIConfig.dividerThickness)
             
             ForEach(values.indices, id: \.self) { idx in
                 contactItemRow(idx)
@@ -103,15 +104,23 @@ public struct ContactItemEditView: View {
                     .if(values[idx].clip) { view in
                         view.clipped()
                     }
-                Divider()
-                    .overlay(Color(uiColor: UIColor.separator))
+                Rectangle()
+                    .fill(Color(uiColor: UIColor.separator))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: ContactFieldUIConfig.dividerThickness)
                     .padding(.leading, 45)
                     .opacity(values[idx].separatorOpacity)
+//                Divider()
+//                    .overlay(Color(uiColor: UIColor.separator))
+//                    .padding(.leading, 45)
+//                    .opacity(values[idx].separatorOpacity)
             }
             addView
                 .frame(height: rowHeight)
-            Divider()
-                .overlay(ContactFieldUIConfig.bottomDivider)
+            Rectangle()
+                .fill(ContactFieldUIConfig.bottomDivider)
+                .frame(maxWidth: .infinity)
+                .frame(height: ContactFieldUIConfig.dividerThickness)
         }
         .background(ContactFieldUIConfig.backgroundPrimary)
     }
@@ -214,7 +223,8 @@ public struct ContactItemEditView: View {
                         .lineLimit(1)
                         .frame(alignment: .leading)
                         .padding(.leading, 10)
-                        .foregroundStyle(Color.accentColor)
+                        //.foregroundStyle(Color.accentColor)
+                        .foregroundStyle(ContactFieldUIConfig.textPrimaryColor)
                         .font(ContactFieldUIConfig.bodyTextFont)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(ContactFieldUIConfig.backgroundPrimary)
@@ -269,6 +279,16 @@ public struct ContactItemEditView: View {
                         .font(.caption)
                         .background(.clear)
                 }
+                /*
+                 Rectangle()
+                     .fill(Color(uiColor: UIColor.separator))
+                     .frame(maxWidth: .infinity)
+                     .frame(height: ContactFieldUIConfig.dividerThickness)
+                     .padding(.leading, 45)
+                     .opacity(values[idx].separatorOpacity)
+
+                 */
+                
                 Rectangle()
                     .frame(width: rowSeparatorW)
                     .foregroundStyle(

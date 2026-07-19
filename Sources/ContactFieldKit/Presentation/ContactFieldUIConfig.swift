@@ -26,6 +26,7 @@ public enum ContactFieldUIConfig {
     public static var success: Color = Color(light: Color(rgba: "#2E7D32"), dark: Color(rgba: "#81C784"))
     public static var destructive: Color = .red
     
+    public static var dividerThickness: CGFloat = 1
     public static var topDivider: Color = Color(uiColor: UIColor.separator)
     public static var bottomDivider: Color = Color(uiColor: UIColor.separator)
 }
