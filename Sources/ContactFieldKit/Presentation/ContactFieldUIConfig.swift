@@ -23,7 +23,6 @@ public enum ContactFieldUIConfig {
     public static var textPrimaryColor: Color = Color(uiColor: UIColor.label)
     public static var textSecondaryColor: Color = Color(uiColor: UIColor.secondaryLabel)
     
-    public static var primary: Color = .blue
     public static var success: Color = Color(light: Color(rgba: "#2E7D32"), dark: Color(rgba: "#81C784"))
     public static var destructive: Color = .red
     
