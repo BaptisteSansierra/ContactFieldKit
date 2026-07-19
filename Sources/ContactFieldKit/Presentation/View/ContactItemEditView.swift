@@ -93,7 +93,7 @@ public struct ContactItemEditView: View {
         VStack(alignment: .leading, spacing: 0) {
             
             Divider()
-                .overlay(Color(uiColor: UIColor.separator))
+                .overlay(ContactFieldUIConfig.topDivider)
             
             ForEach(values.indices, id: \.self) { idx in
                 contactItemRow(idx)
@@ -111,7 +111,7 @@ public struct ContactItemEditView: View {
             addView
                 .frame(height: rowHeight)
             Divider()
-                .overlay(Color(uiColor: UIColor.separator))
+                .overlay(ContactFieldUIConfig.bottomDivider)
         }
         .background(ContactFieldUIConfig.backgroundPrimary)
     }
