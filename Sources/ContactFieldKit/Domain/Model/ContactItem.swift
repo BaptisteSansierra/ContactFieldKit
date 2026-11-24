@@ -13,7 +13,8 @@ import Foundation
 public struct ContactItem: Identifiable, Hashable, Sendable {
     
     // MARK: Static
-    static private let lastSupportedVersion: Int = 1
+    // v0: legacy format, before versioning (no "version" key)
+    static private let lastSupportedVersion: Int = 0
     static private let version: Int = 1
 
     // MARK: Static creators
@@ -96,12 +97,8 @@ extension ContactItem: Codable {
     
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
-        var version = -1
-        do {
-            version = try c.decode(Int.self, forKey: .version)
-        } catch {
-            throw ContactItemError.droppedVersion
-        }
+        // No version: legacy format (v0)
+        let version = try c.decodeIfPresent(Int.self, forKey: .version) ?? 0
         guard version >= Self.lastSupportedVersion else {
             throw ContactItemError.droppedVersion
         }
@@ -110,6 +107,10 @@ extension ContactItem: Codable {
         }
         self.id = try c.decode(String.self, forKey: .id)
         self.value = try c.decode(String.self, forKey: .value)
+        if version == 0 {
+            self.label = try Self.decodeLegacyLabel(c)
+            return
+        }
         let kindRaw = try c.decode(String.self, forKey: .kind)
         let labelRaw = try c.decode(String.self, forKey: .label)
         guard let kind = ContactItemKind(rawValue: kindRaw) else {
@@ -125,5 +126,46 @@ extension ContactItem: Codable {
         try c.encode(value, forKey: .value)
         try c.encode(kind, forKey: .kind)
         try c.encode(label.rawValue, forKey: .label)
+    }
+}
+
+// MARK: - Legacy decoding (v0)
+/// v0 label, synthesized Codable of the former single `Label` enum:
+///     {"kind": "phone", "value": {"mobile": {}}}
+///     {"kind": "phone", "value": {"custom": {"_0": "Papa"}}}
+extension ContactItem {
+
+    private struct LegacyLabel: Decodable {
+        let kind: String
+        let value: [String: LegacyLabelPayload]
+    }
+
+    private struct LegacyLabelPayload: Decodable {
+        let custom: String?
+
+        enum CodingKeys: String, CodingKey {
+            case custom = "_0"
+        }
+    }
+
+    private static func decodeLegacyLabel(_ c: KeyedDecodingContainer<CodingKeys>) throws -> ContactLabel {
+        let legacy = try c.decode(LegacyLabel.self, forKey: .label)
+        guard let kind = ContactItemKind(rawValue: legacy.kind) else {
+            throw ContactItemError.unknownKind
+        }
+        guard legacy.value.count == 1, let (name, payload) = legacy.value.first else {
+            throw DecodingError.dataCorruptedError(forKey: .label, in: c,
+                                                   debugDescription: "Legacy label must have exactly one case")
+        }
+        guard name == "custom" else {
+            // The former enum didn't check the kind: a label of another kind becomes a custom one
+            return ContactLabel(rawValue: name, kind: kind)
+        }
+        guard let text = payload.custom else {
+            throw DecodingError.dataCorruptedError(forKey: .label, in: c,
+                                                   debugDescription: "Legacy custom label without text")
+        }
+        // Stored as custom: stays custom, even if named as a built-in label
+        return ContactLabel(kind: kind, custom: text)
     }
 }

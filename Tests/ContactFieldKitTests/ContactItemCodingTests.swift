@@ -109,9 +109,9 @@ struct ContactItemCodingTests {
         #expect(item.label == .phone(.custom("fax")))
     }
 
-    @Test("Missing version is a dropped version")
+    @Test("Missing version with the v1 shape is rejected (read as legacy)")
     func decodeMissingVersion() {
-        #expect(throws: ContactItemError.droppedVersion) {
+        #expect(throws: DecodingError.self) {
             try decode(#"{"id":"abc","value":"1","kind":"phone","label":"phone"}"#)
         }
     }
@@ -119,7 +119,7 @@ struct ContactItemCodingTests {
     @Test("Version below the supported one is a dropped version")
     func decodeOldVersion() {
         #expect(throws: ContactItemError.droppedVersion) {
-            try decode(#"{"version":0,"id":"abc","value":"1","kind":"phone","label":"phone"}"#)
+            try decode(#"{"version":-1,"id":"abc","value":"1","kind":"phone","label":"phone"}"#)
         }
     }
 

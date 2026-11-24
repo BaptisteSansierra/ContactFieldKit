@@ -46,21 +46,21 @@ import ContactFieldKit
 
 struct ContactView: View {
     @State private var phones: [ContactItem] = [
-        ContactItem(phone: "+12125550112", label: .home),
-        ContactItem(phone: "+13105557834", label: .mobile),
-        ContactItem(phone: "+14155559021", label: .work),
-        ContactItem(phone: "+16175551276", label: .custom("assistant"))
+        .phone("+12125550112", label: .home),
+        .phone("+13105557834", label: .mobile),
+        .phone("+14155559021", label: .work),
+        .phone("+16175551276", label: .custom("assistant"))
     ]
     
     @State private var emails: [ContactItem] = [
-        ContactItem(email: "alice.johnson@email.com", label: .email),
-        ContactItem(email: "alice.home@example.com", label: .home),
-        ContactItem(email: "alice.work@company.com", label: .work)
+        .email("alice.johnson@email.com"),
+        .email("alice.home@example.com", label: .home),
+        .email("alice.work@company.com", label: .work)
     ]
     
     @State private var urls: [ContactItem] = [
-        ContactItem(url: "alicejohnson.com", label: .homepage),
-        ContactItem(url: "intranet.company.com/alice", label: .work)
+        .url("alicejohnson.com", label: .homepage),
+        .url("intranet.company.com/alice", label: .work)
     ]
     
     var body: some View {
@@ -88,10 +88,11 @@ Features:
 
 ### Edit Mode
 
-Use `ContactItemEditView` for full editing capabilities:
+Use `ContactItemEditView` for full editing capabilities. It works on `ContactItemUI`, a wrapper holding the row's layout state around each `ContactItem`:
 ```swift
+@State private var phones: [ContactItemUI] = user.phones.map { ContactItemUI(contactItem: $0) }
 @State private var noFlyZoneEnabled = false
-@State private var noFlyZoneCompletionStatus: NoFlyZoneCompletionStatus = .none
+@State private var noFlyZoneCompletionStatus: NoFlyZoneCompletionStatus = .undefined
 @State private var noFlyAuthorizedZones: [NoFlyZoneData] = []
 
 ContactItemEditView(
@@ -102,6 +103,9 @@ ContactItemEditView(
     noFlyZoneCompletionStatus: $noFlyZoneCompletionStatus,
     noFlyAuthorizedZones: $noFlyAuthorizedZones
 )
+
+// Back to the model
+let edited = phones.map(\.contactItem)
 ```
 
 Features:
@@ -113,55 +117,72 @@ Features:
 
 ### ContactItem Model
 
-The `ContactItem` model is `Codable` for easy persistence:
+A `ContactItem` is a value with a label, like in Apple's Contacts app (`mobile: +1345678`). Each kind (phone, email, URL) has its own label type, so a label that doesn't belong to the kind doesn't compile:
 ```swift
-// Create items
-let phone = ContactItem(phone: "+1234567890", label: .mobile)
-let email = ContactItem(email: "user@example.com", label: .work)
-let url = ContactItem(url: "example.com", label: .homepage)
+let phone = ContactItem.phone("+1234567890", label: .mobile)
+let email = ContactItem.email("user@example.com", label: .work)
+let url = ContactItem.url("example.com", label: .homepage)
 
-// Encode to JSON
-let encoder = JSONEncoder()
-let data = try encoder.encode(phones)
+// The label defaults to the kind's generic one (.phone / .email / .url)
+let other = ContactItem.phone("+1234567890")
 
-// Decode from JSON
-let decoder = JSONDecoder()
-let decodedPhones = try decoder.decode([ContactItem].self, from: data)
+// ContactItem.phone("+1234567890", label: .homepage) // ❌ doesn't compile
 
-// Store as string in database
-let jsonString = String(data: data, encoding: .utf8)
+phone.kind   // .phone
+phone.label  // .phone(.mobile)
 ```
 
 ### Available Labels
 
-ContactFieldKit provides standard labels that match Apple's Contacts app:
+ContactFieldKit provides standard labels that match Apple's Contacts app. Each kind has its own labels, plus the shared ones:
 
-**Phone Labels:**
-- `.phone`
-- `.mobile`
-- `.home`
-- `.work`
-- `.school`
-- `.other`
-- `.custom(String)` - for custom labels
+| Kind | Label type | Specific labels |
+|------|------------|-----------------|
+| Phone | `PhoneLabel` | `.phone`, `.mobile` |
+| Email | `EmailLabel` | `.email`, `.personal` |
+| URL | `URLLabel` | `.url`, `.homepage` |
 
-**Email Labels:**
-- `.email`
-- `.personal`
-- `.work`
-- `.home`
-- `.school`
-- `.other`
-- `.custom(String)`
+**Shared labels** (available for every kind): `.home`, `.work`, `.school`, `.other`, and `.custom(String)` for custom labels.
 
-**URL Labels:**
-- `.url`
-- `.homepage`
-- `.home`
-- `.work`
-- `.school`
-- `.other`
-- `.custom(String)`
+Shared labels are `SharedLabel` cases: `.home` is a shortcut for `.shared(.home)`.
+
+Custom labels created in the label picker are remembered (per kind) and offered again the next time.
+
+### Persistence
+
+`ContactItem` is `Codable`. It encodes to a flat, versioned JSON object:
+```json
+{ "version": 1, "id": "…", "kind": "phone", "label": "mobile", "value": "+1234567890" }
+```
+A custom label is stored as its text (`"label": "assistant"`).
+
+```swift
+// Encode / decode
+let data = try JSONEncoder().encode(phones)
+let decodedPhones = try JSONDecoder().decode([ContactItem].self, from: data)
+
+// Store a single item as a string (e.g. in a database)
+let raw = phone.rawValue
+let restored = ContactItem(rawValue: raw)   // nil if it can't be decoded
+```
+
+Decoding rules:
+- No `version` means the legacy format (before versioning, `"label": {"kind": "phone", "value": {"mobile": {}}}`). It's still read, and the item is written back as version 1 on its next encoding. In that format a custom label stays custom even when named like a built-in one, and a label of another kind becomes a custom one.
+- An unsupported `version` throws `ContactItemError.droppedVersion`, and a version newer than the package throws `ContactItemError.unknownVersion`.
+- An unknown `kind` throws `ContactItemError.unknownKind`.
+- An unknown label name decodes as a custom label, so a label added in a future version still shows up in an older one.
+- A custom label whose text is a built-in label name of the same kind (e.g. `"home"` for a phone) decodes as that built-in label.
+
+## Testing
+
+The package has a test suite (Swift Testing) covering the models, the encoding, the labels and the services.
+
+The package uses UIKit, so the tests run on an iOS simulator (`swift test` doesn't work):
+- **Xcode:** open the package, pick an iOS simulator as destination, then Product → Test (⌘U).
+- **Terminal:**
+```sh
+xcodebuild test -scheme ContactFieldKit -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+```
 
 ## Dependencies
 
@@ -170,8 +191,7 @@ ContactFieldKit uses [NoFlyZone](https://github.com/BaptisteSansierra/NoFlyZone)
 ## Requirements
 
 - iOS 17.0+
-- macOS 14.0+
-- Swift 5.9+
+- Swift 6.2+ (Xcode 26+)
 
 ## Example Project
 
