@@ -33,7 +33,7 @@ public struct ContactItemUI: Equatable {
         self.deleteFrame = .zero
     }
     
-    internal init(kind: ContactLabel.Kind,
+    internal init(kind: ContactItemKind,
                   height: CGFloat,
                   opacity: CGFloat,
                   clip: Bool,

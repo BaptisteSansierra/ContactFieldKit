@@ -11,7 +11,7 @@ internal struct CustomLabelStorage {
     
     static private let keyBase: String = "ContactFieldKit.custom."
     
-    static func store(kind: ContactLabel.Kind,
+    static func store(kind: ContactItemKind,
                       value: String) {
         let ud = UserDefaults.standard
         if let values = ud.value(forKey: key(kind)) as? [String] {
@@ -26,7 +26,7 @@ internal struct CustomLabelStorage {
         }
     }
     
-    static func labels(kind: ContactLabel.Kind) -> [String] {
+    static func labels(kind: ContactItemKind) -> [String] {
         let ud = UserDefaults.standard
         guard let values = ud.value(forKey: key(kind)) as? [String] else {
             return []
@@ -34,7 +34,7 @@ internal struct CustomLabelStorage {
         return values
     }
      
-    static private func key(_ kind: ContactLabel.Kind) -> String {
+    static private func key(_ kind: ContactItemKind) -> String {
         keyBase + kind.rawValue
     }
 }

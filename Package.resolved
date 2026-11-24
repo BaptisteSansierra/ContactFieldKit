@@ -1,13 +1,13 @@
 {
-  "originHash" : "2240212b27d856ab1ff1aa845585cc6d05282da0470a5a5a04037c5cba6faddc",
+  "originHash" : "78a83cdc6909c2b1467caaa7d00748ada858c28c2a3d0a4307205dd96e881f35",
   "pins" : [
     {
       "identity" : "noflyzone",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/BaptisteSansierra/NoFlyZone.git",
       "state" : {
-        "revision" : "ce1ebba1de65cb97d8ca9a62c0eb4aa09860681f",
-        "version" : "1.0.2"
+        "revision" : "46fd1ff4c7d6992bb6ff7ff7ae8d514cc8bd3845",
+        "version" : "1.0.4"
       }
     }
   ],

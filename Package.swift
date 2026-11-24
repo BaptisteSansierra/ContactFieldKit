@@ -25,6 +25,9 @@ let package = Package(
                 .product(name: "NoFlyZone", package: "noflyzone")
             ]
         ),
-
+        .testTarget(
+            name: "ContactFieldKitTests",
+            dependencies: ["ContactFieldKit"]
+        ),
     ]
 )

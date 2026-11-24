@@ -57,15 +57,16 @@ extension User: CustomStringConvertible {
         var desc = "--- \(name)"
         desc += "\n\t-- Phones"
         for p in phones {
-            desc += "\n\t \(p.type.rawValue) : \(p.value)"
+            //desc += "\n\t \(p.rawValue)"
+            desc += "\n\t \(p.kind.rawValue) : \(p.value)"
         }
         desc += "\n\t-- Emails"
         for p in emails {
-            desc += "\n\t \(p.type.rawValue) : \(p.value)"
+            desc += "\n\t \(p.kind.rawValue) : \(p.value)"
         }
         desc += "\n\t-- Urls"
         for p in urls {
-            desc += "\n\t \(p.type.rawValue) : \(p.value)"
+            desc += "\n\t \(p.kind.rawValue) : \(p.value)"
         }
         desc += "\n-------"
         return desc

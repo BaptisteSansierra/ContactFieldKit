@@ -19,6 +19,12 @@ struct ContextMenuInteractionView<Content: View>: UIViewRepresentable {
         return Coordinator(parent: self)
     }
 
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: UIViewType, context: Context) -> CGSize? {
+        guard let width = proposal.width, width.isFinite else { return nil }
+        let fitting = uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
+        return CGSize(width: width, height: proposal.height ?? fitting.height)
+    }
+    
     func makeUIView(context: Context) -> some UIView {
 
 #if true

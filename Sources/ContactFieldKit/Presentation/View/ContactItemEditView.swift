@@ -11,7 +11,7 @@ import NoFlyZone
 public struct ContactItemEditView: View {
     
     // MARK: - States & Bindings
-    @State private var kind: ContactLabel.Kind
+    @State private var kind: ContactItemKind
     @State private var editedLabelIndex: Int!
     @State private var editedLabel: ContactLabel!
     // Layout
@@ -39,7 +39,7 @@ public struct ContactItemEditView: View {
     
     // MARK: - init
     public init(viewIdentifier: Int,
-                kind: ContactLabel.Kind,
+                kind: ContactItemKind,
                 values: Binding<[ContactItemUI]>,
                 noFlyZoneEnabled: Binding<Bool>,
                 noFlyZoneCompletionStatus: Binding<NoFlyZoneCompletionStatus>,
@@ -325,10 +325,10 @@ public struct ContactItemEditView: View {
     // as in contact , would make it easier (no separator delay, ...)
     private func addItem() {
         values.append(ContactItemUI(kind: kind,
-                                        height: 0,
-                                        opacity: 0,
-                                        clip: true,
-                                        separatorOpacity: 0))
+                                    height: 0,
+                                    opacity: 0,
+                                    clip: true,
+                                    separatorOpacity: 0))
         
         var addItemAnimationDuration = 0.3
         
@@ -348,7 +348,7 @@ public struct ContactItemEditView: View {
     }
     
     private func getLabelContent(_ idx: Int) -> String {
-        values[idx].contactItem.label.value.l10n
+        values[idx].contactItem.label.l10n
     }
     
     private func getAddViewContent() -> String.LocalizationValue {
@@ -398,7 +398,7 @@ public struct ContactItemEditView: View {
         guard values.contains(where: {$0.offset != 0}) else {
             print("WARNING: no zero offsets found ?? weird thing")
             for idx in 0..<values.count {
-                print(" reset anyway \(idx) : \(values[idx].contactItem.label.value.key) \(values[idx].contactItem.value)")
+                print(" reset anyway \(idx) : \(values[idx].contactItem.label.key) \(values[idx].contactItem.value)")
                 // Do not reset offset for a row to be deleted
                 if values[idx].toBeDeleted {
                     print("  SKIP Reset offset at line \(idx) ")
@@ -512,6 +512,18 @@ struct MockContactItemEditView: View {
     }
     
     init() {
+        self.phones = [ContactItem.phone("+12125557483", label: .shared(.home)),
+                       ContactItem .phone("+16465552917", label: .mobile),
+                       ContactItem.phone("+13125556042", label: .shared(.custom("work"))),
+                       ContactItem.phone("+14155558831", label: .shared(.custom("club")))]
+            .map { ContactItemUI(contactItem: $0) }
+
+        self.emails = [ContactItem.email("john.doe@home.com", label: .email)]
+            .map { ContactItemUI(contactItem: $0) }
+        self.urls = [ContactItem.url("john.doe.home.com", label: .url)]
+            .map { ContactItemUI(contactItem: $0) }
+
+        /*
         self.phones = [ContactItem(value: "+12125557483",
                                    label: ContactLabel(kind: .phone, label: .home)),
                        ContactItem(value: "+16465552917",
@@ -532,6 +544,7 @@ struct MockContactItemEditView: View {
                                  label: ContactLabel(kind: .url, label: .url))
         ]
             .map { ContactItemUI(contactItem: $0) }
+         */
     }
     
     private func noFlyZoneOnBlocked() {

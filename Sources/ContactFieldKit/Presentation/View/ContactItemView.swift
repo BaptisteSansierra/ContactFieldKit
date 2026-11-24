@@ -85,26 +85,13 @@ public struct ContactItemView: View {
                              willEnd: { highlightedRow = nil },
                              willDisplay: { highlightedRow = idx }
                 )
-            
-            /*
-                .contextMenu(menuItems: {
-                    Button {
-                        UIPasteboard.general.string = contactItems[idx].value
-                    } label: {
-                        Label("Copy", systemImage: "doc.on.doc")
-                    }
-                }/*, preview: {
-                    contactItemRowContentView(idx)
-                }*/)
-             */
-
         }
         .clipped()
     }
     
     private func contactItemRowContentView(_ idx: Int) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(contactItems[idx].label.value.l10n)
+            Text(contactItems[idx].label.l10n)
                 .font(ContactFieldUIConfig.captionTextFont)
                 .foregroundStyle(ContactFieldUIConfig.textPrimaryColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -114,7 +101,8 @@ public struct ContactItemView: View {
             Text(contactItems[idx].value)
                 .font(ContactFieldUIConfig.bodyTextFont)
                 .foregroundStyle(.blue)
-                .contentShape(Rectangle())
+                .lineLimit(1)
+                .truncationMode(.middle)         // good for URLs and emails
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
             Spacer()
@@ -168,6 +156,13 @@ struct MockContactItemView: View {
    }
    
    init() {
+       self.phones = [ContactItem.phone("+12125557483", label: .phone)]
+       self.emails = [ContactItem.email("john.doe@home.com", label: .email)]
+       let longOne = "https://www.google.com/maps/place//data=!4m2!3m1!1s0x0:0xe3f2041ec987cae3"
+       self.urls = [ContactItem.url("google.com", label: .url),
+                    ContactItem.url(longOne, label: .custom("olala"))]
+
+       /*
        self.phones = [ContactItem(value: "+12125557483",
                                   label: ContactLabel(kind: .phone, label: .phone))/*,
                       ContactItem(value: "+16465552917",
@@ -177,8 +172,12 @@ struct MockContactItemView: View {
                       ContactItem(value: "+14155558831",
                                   label: ContactLabel(kind: .phone, label: .custom("club")))*/]
        self.emails = [ContactItem(value: "john.doe@home.com", label: ContactLabel(kind: .email, label: .email))]
+       let longOne = "https://www.google.com/maps/place//data=!4m2!3m1!1s0x0:0xe3f2041ec987cae3"
        self.urls = [ContactItem(value: "google.com",
-                                label: ContactLabel(kind: .url, label: .url))]
+                                label: ContactLabel(kind: .url, label: .url)),
+                    ContactItem(value: longOne,
+                                label: ContactLabel(kind: .url, label: .custom("olala")))]
+        */
    }
 }
 

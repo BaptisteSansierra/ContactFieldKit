@@ -16,11 +16,11 @@ struct LabelPickerView: View {
     @Binding private var selectedContactLabel: ContactLabel?
     @Environment(\.dismiss) var dismiss
     
-    private let kind: ContactLabel.Kind
-    private var labels: [ContactLabel.Label]
+    private let kind: ContactItemKind
+    private var labels: [ContactLabel]
     private let rowHeight: CGFloat = 50
 
-    init(kind: ContactLabel.Kind, selectedContactLabel: Binding<ContactLabel? >) {
+    init(kind: ContactItemKind, selectedContactLabel: Binding<ContactLabel? >) {
         self.kind = kind
         self._selectedContactLabel = selectedContactLabel
         labels = ContactLabel.allLabels(kind: kind)
@@ -104,7 +104,7 @@ struct LabelPickerView: View {
                 .contentShape(Rectangle())
                 .overlay {
                     if let selectedContactLabel = selectedContactLabel,
-                       selectedContactLabel.value.key == labels[index].key {
+                       selectedContactLabel == labels[index] {
                         HStack {
                             Spacer()
                             Image(systemName: "checkmark")
@@ -121,8 +121,7 @@ struct LabelPickerView: View {
         }
         .frame(height: rowHeight)
         .onTapGesture {
-            selectedContactLabel = ContactLabel(kind: kind,
-                                                label: labels[index])
+            selectedContactLabel = labels[index]
             dismiss()
         }
     }
@@ -134,7 +133,7 @@ struct LabelPickerView: View {
                 .contentShape(Rectangle())
                 .overlay {
                     if let selectedContactLabel = selectedContactLabel,
-                       selectedContactLabel.value.key == customLabels[index] {
+                       selectedContactLabel == ContactLabel(kind: kind, custom: customLabels[index]) {
                         HStack {
                             Spacer()
                             Image(systemName: "checkmark")
@@ -153,7 +152,7 @@ struct LabelPickerView: View {
         .frame(height: rowHeight)
         .onTapGesture {
             selectedContactLabel = ContactLabel(kind: kind,
-                                                label: .custom(customLabels[index]))
+                                                custom: customLabels[index])
             dismiss()
         }
     }
@@ -163,18 +162,18 @@ struct LabelPickerView: View {
     }
     
     private func onCustomLabelSubmit() {
-       guard !customLabel.isEmpty else {
-           dismiss()
-           return
-       }
-       // Store new custom label if do not exists
-       CustomLabelStorage.store(kind: kind,
-                                value: customLabel)
-       updateCustomLabels()
-       // Set label
-       selectedContactLabel = ContactLabel(kind: kind,
-                                           label: .custom(customLabel))
-       dismiss()
+        guard !customLabel.isEmpty else {
+            dismiss()
+            return
+        }
+        // Store new custom label if do not exists
+        CustomLabelStorage.store(kind: kind,
+                                 value: customLabel)
+        updateCustomLabels()
+        // Set label
+        selectedContactLabel = ContactLabel(kind: kind, custom: customLabel)
+        
+        dismiss()
     }
 }
 
@@ -182,7 +181,7 @@ struct LabelPickerView: View {
 
 public struct MockLabelPickerView: View {
     
-    @State var contactLabel: ContactLabel? = ContactLabel(kind: .phone, label: .mobile)
+    @State var contactLabel: ContactLabel? = ContactLabel.defaultPhone
 
     public init() {}
     public var body: some View {

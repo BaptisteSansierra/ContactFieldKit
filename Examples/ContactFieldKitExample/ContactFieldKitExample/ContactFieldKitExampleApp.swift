@@ -19,222 +19,87 @@ struct ContactFieldKitExampleApp: App {
             User(
                 name: "Alice Johnson",
                 phones: [
-                    ContactItem(
-                        value: "+12125550112",
-                        label: ContactLabel(kind: .phone, label: .home)
-                    ),
-                    ContactItem(
-                        value: "+13105557834",
-                        label: ContactLabel(kind: .phone, label: .mobile)
-                    ),
-                    ContactItem(
-                        value: "+14155559021",
-                        label: ContactLabel(kind: .phone, label: .work)
-                    ),
-                    ContactItem(
-                        value: "+16175551276",
-                        label: ContactLabel(kind: .phone, label: .custom("assistant"))
-                    )
+                    ContactItem.phone("+12125550112", label: .home),
+                    ContactItem.phone("+13105557834", label: .mobile),
+                    ContactItem.phone("+14155559021", label: .work),
+                    ContactItem.phone("+16175551276", label: .custom("assistant"))
                 ],
                 emails: [
-                    ContactItem(
-                        value: "alice.johnson@email.com",
-                        label: ContactLabel(kind: .email, label: .email)
-                    ),
-                    ContactItem(
-                        value: "alice.home@example.com",
-                        label: ContactLabel(kind: .email, label: .home)
-                    ),
-                    ContactItem(
-                        value: "alice.work@company.com",
-                        label: ContactLabel(kind: .email, label: .work)
-                    )
+                    ContactItem.email("alice.johnson@email.com", label: .email),
+                    ContactItem.email("alice.home@example.com", label: .home),
+                    ContactItem.email("alice.work@company.com", label: .work)
                 ],
                 urls: [
-                    ContactItem(
-                        value: "alicejohnson.com",
-                        label: ContactLabel(kind: .url, label: .homepage)
-                    ),
-                    ContactItem(
-                        value: "intranet.company.com/alice",
-                        label: ContactLabel(kind: .url, label: .work)
-                    )
+                    ContactItem.url("alicejohnson.com", label: .homepage),
+                    ContactItem.url("intranet.company.com/alice", label: .work)
                 ]
             ),
 
             User(
                 name: "Michael Brown",
                 phones: [
-                    ContactItem(
-                        value: "+16465553421",
-                        label: ContactLabel(kind: .phone, label: .phone)
-                    ),
-                    ContactItem(
-                        value: "+12025556789",
-                        label: ContactLabel(kind: .phone, label: .other)
-                    ),
-                    ContactItem(
-                        value: "+17185559876",
-                        label: ContactLabel(kind: .phone, label: .school)
-                    )
+                    ContactItem.phone("+16465553421", label: .phone),
+                    ContactItem.phone("+12025556789", label: .other),
+                    ContactItem.phone("+17185559876", label: .school)
                 ],
                 emails: [
-                    ContactItem(
-                        value: "michael.brown@personal.org",
-                        label: ContactLabel(kind: .email, label: .personal)
-                    ),
-                    ContactItem(
-                        value: "mbrown@school.edu",
-                        label: ContactLabel(kind: .email, label: .school)
-                    ),
-                    ContactItem(
-                        value: "mike.other@mail.net",
-                        label: ContactLabel(kind: .email, label: .other)
-                    )
+                    ContactItem.email("michael.brown@personal.org", label: .personal),
+                    ContactItem.email("mbrown@school.edu", label: .school),
+                    ContactItem.email("mike.other@mail.net", label: .other)
                 ],
                 urls: [
-                    ContactItem(
-                        value: "michaelbrown.blog",
-                        label: ContactLabel(kind: .url, label: .url)
-                    ),
-                    ContactItem(
-                        value: "schoolportal.edu/mbrown",
-                        label: ContactLabel(kind: .url, label: .school)
-                    )
+                    ContactItem.url("michaelbrown.blog", label: .url),
+                    ContactItem.url("schoolportal.edu/mbrown", label: .school)
                 ]
             ),
 
             User(
                 name: "Sophie Martin",
                 phones: [
-                    ContactItem(
-                        value: "+33142223344",
-                        label: ContactLabel(kind: .phone, label: .mobile)
-                    )/*,
-                    ContactItem(
-                        value: "+33153334455",
-                        label: ContactLabel(kind: .phone, label: .work)
-                    ),
-                    ContactItem(
-                        value: "+33164445566",
-                        label: ContactLabel(kind: .phone, label: .custom("studio"))
-                    )*/
+                    ContactItem.phone("+33142223344", label: .mobile)
                 ],
                 emails: [
-                    ContactItem(
-                        value: "sophie.martin@email.fr",
-                        label: ContactLabel(kind: .email, label: .email)
-                    )/*,
-                    ContactItem(
-                        value: "sophie@home.fr",
-                        label: ContactLabel(kind: .email, label: .home)
-                    ),
-                    ContactItem(
-                        value: "contact@sophiemartin.art",
-                        label: ContactLabel(kind: .email, label: .custom("gallery"))
-                    )*/
+                    ContactItem.email("sophie.martin@email.fr", label: .email)
                 ],
-                urls: [/*
-                    ContactItem(
-                        value: "sophiemartin.art",
-                        label: ContactLabel(kind: .url, label: .home)
-                    ),
-                    ContactItem(
-                        value: "portfolio.sophiemartin.art",
-                        label: ContactLabel(kind: .url, label: .custom("portfolio"))
-                    )*/
+                urls: [
                 ]
             ),
 
             User(
                 name: "David Chen",
                 phones: [
-                    ContactItem(
-                        value: "+8613812345678",
-                        label: ContactLabel(kind: .phone, label: .home)
-                    ),
-                    ContactItem(
-                        value: "+8613911122233",
-                        label: ContactLabel(kind: .phone, label: .other)
-                    ),
-                    ContactItem(
-                        value: "+8613719988776",
-                        label: ContactLabel(kind: .phone, label: .school)
-                    )
+                    ContactItem.phone("+8613812345678", label: .home),
+                    ContactItem.phone("+8613911122233", label: .other),
+                    ContactItem.phone("+8613719988776", label: .school),
                 ],
                 emails: [
-                    ContactItem(
-                        value: "david.chen@email.cn",
-                        label: ContactLabel(kind: .email, label: .email)
-                    ),
-                    ContactItem(
-                        value: "dchen@work.cn",
-                        label: ContactLabel(kind: .email, label: .work)
-                    ),
-                    ContactItem(
-                        value: "david.school@university.cn",
-                        label: ContactLabel(kind: .email, label: .school)
-                    )
+                    ContactItem.email("david.chen@email.cn", label: .email),
+                    ContactItem.email("dchen@work.cn", label: .work),
+                    ContactItem.email("david.school@university.cn", label: .school)
                 ],
                 urls: [
-                    ContactItem(
-                        value: "davidchen.cn",
-                        label: ContactLabel(kind: .url, label: .homepage)
-                    ),
-                    ContactItem(
-                        value: "lab.university.cn/dchen",
-                        label: ContactLabel(kind: .url, label: .school)
-                    ),
-                    ContactItem(
-                        value: "profile.davidchen.cn",
-                        label: ContactLabel(kind: .url, label: .other)
-                    )
+                    ContactItem.url("davidchen.cn", label: .homepage),
+                    ContactItem.url("lab.university.cn/dchen", label: .school),
+                    ContactItem.url("profile.davidchen.cn", label: .other)
                 ]
             ),
 
             User(
                 name: "Emma Williams",
                 phones: [
-                    ContactItem(
-                        value: "+447700900123",
-                        label: ContactLabel(kind: .phone, label: .mobile)
-                    ),
-                    ContactItem(
-                        value: "+442079460321",
-                        label: ContactLabel(kind: .phone, label: .phone)
-                    ),
-                    ContactItem(
-                        value: "+447700900999",
-                        label: ContactLabel(kind: .phone, label: .work)
-                    )
+                    ContactItem.phone("+447700900123", label: .mobile),
+                    ContactItem.phone("+442079460321", label: .phone),
+                    ContactItem.phone("+447700900999", label: .work)
                 ],
                 emails: [
-                    ContactItem(
-                        value: "emma.williams@email.co.uk",
-                        label: ContactLabel(kind: .email, label: .email)
-                    ),
-                    ContactItem(
-                        value: "emma@personal.co.uk",
-                        label: ContactLabel(kind: .email, label: .personal)
-                    ),
-                    ContactItem(
-                        value: "emma.custom@domain.co.uk",
-                        label: ContactLabel(kind: .email, label: .custom("events"))
-                    )
+                    ContactItem.email("emma.williams@email.co.uk", label: .email),
+                    ContactItem.email("emma@personal.co.uk", label: .personal),
+                    ContactItem.email("emma.custom@domain.co.uk", label: .custom("events"))
                 ],
                 urls: [
-                    ContactItem(
-                        value: "emmawilliams.co.uk",
-                        label: ContactLabel(kind: .url, label: .url)
-                    ),
-                    ContactItem(
-                        value: "emma-home.co.uk",
-                        label: ContactLabel(kind: .url, label: .home)
-                    ),
-                    ContactItem(
-                        value: "emmawork.co.uk",
-                        label: ContactLabel(kind: .url, label: .work)
-                    )
+                    ContactItem.url("emmawilliams.co.uk", label: .url),
+                    ContactItem.url("emma-home.co.uk", label: .home),
+                    ContactItem.url("emmawork.co.uk", label: .work)
                 ]
             )
         ]

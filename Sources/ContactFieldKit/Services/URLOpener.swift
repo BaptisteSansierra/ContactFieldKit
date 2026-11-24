@@ -25,7 +25,7 @@ public struct URLOpener {
 
     // MARK: public methods
     static public func openURL(contactItem: ContactItem) throws {
-        switch contactItem.label.kind {
+        switch contactItem.kind {
             case .phone:
                 try openPhoneURL(contactItem.value)
             case .email:

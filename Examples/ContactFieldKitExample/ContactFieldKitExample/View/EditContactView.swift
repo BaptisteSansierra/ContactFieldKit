@@ -134,12 +134,9 @@ struct EditContactView: View {
 
 #Preview {
     @Previewable @State var user: User = User(name: "John Doe",
-                                 phones: [
-                                    ContactItem(value: "123",
-                                                label: ContactLabel(kind: .phone))
-                                 ],
-                                 emails: [],
-                                 urls: [])
+                                              phones: [ContactItem.phone( "123")],
+                                              emails: [],
+                                              urls: [])
 
     EditContactView(user: $user)
 }

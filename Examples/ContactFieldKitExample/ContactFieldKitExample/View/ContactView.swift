@@ -105,10 +105,7 @@ struct ContactView: View {
 
 #Preview {
     @Previewable @State var user: User = User(name: "John Doe",
-                                 phones: [
-                                    ContactItem(value: "123",
-                                                label: ContactLabel(kind: .phone))
-                                 ],
+                                 phones: [ContactItem.phone("123")],
                                  emails: [],
                                  urls: [])
     NavigationStack {

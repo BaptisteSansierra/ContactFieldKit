@@ -59,23 +59,17 @@ struct ContactDetailsView: View {
 
 #Preview {
     
-    @Previewable @State var pipo: ContactLabel = ContactLabel(kind: .phone, label: .mobile)
-
-    
+    @Previewable @State var pipo: ContactLabel = ContactLabel.phone(.mobile)
     @Previewable @State var user: User = User(name: "John Doe",
                                  phones: [
-                                    ContactItem(value: "123",
-                                                label: ContactLabel(kind: .phone)),
-                                    ContactItem(value: "456",
-                                                label: ContactLabel(kind: .phone, label: .mobile))
+                                    ContactItem.phone("123"),
+                                    ContactItem.phone("456", label: .mobile)
                                  ],
                                  emails: [
-                                    ContactItem(value: "123",
-                                                label: ContactLabel(kind: .email, label: .email))
+                                    ContactItem.email("123", label: .email)
                                  ],
                                  urls: [
-                                    ContactItem(value: "123",
-                                                label: ContactLabel(kind: .url, label: .url))
+                                    ContactItem.url("123", label: .url)
                                  ])
 
     ContactDetailsView(user: $user)
